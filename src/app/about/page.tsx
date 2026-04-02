@@ -66,15 +66,12 @@ export default function AboutPage() {
                     {/* Portrait */}
                     <ScrollReveal className="lg:col-span-2">
                         <div className="relative">
-                            <div className="aspect-[3/4] bg-cream border border-beige/50 flex items-center justify-center">
-                                <div className="text-center">
-                                    <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-beige/30 flex items-center justify-center">
-                                        <span className="font-serif text-xl text-gold">PB</span>
-                                    </div>
-                                    <p className="text-xs text-charcoal-light/40 font-sans">
-                                        Portrait
-                                    </p>
-                                </div>
+                            <div className="aspect-[3/4] border border-beige/50 overflow-hidden">
+                                <img
+                                    src="/About.jpg"
+                                    alt="Pramesh Bhandari"
+                                    className="w-full h-full object-cover object-top"
+                                />
                             </div>
                             <div className="absolute -top-3 -left-3 w-16 h-16 border-t-2 border-l-2 border-gold/40" />
                             <div className="absolute -bottom-3 -right-3 w-16 h-16 border-b-2 border-r-2 border-gold/40" />

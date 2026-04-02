@@ -114,15 +114,12 @@ export default function HomePage() {
               className="hidden lg:flex justify-center"
             >
               <div className="relative">
-                <div className="w-[400px] h-[500px] bg-cream border border-beige/50 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-beige/30 flex items-center justify-center">
-                      <span className="font-serif text-2xl text-gold">PB</span>
-                    </div>
-                    <p className="text-sm text-charcoal-light/40 font-sans">
-                      Professional Portrait
-                    </p>
-                  </div>
+                <div className="w-[400px] h-[500px] relative overflow-hidden border border-beige/50">
+                  <img
+                    src="/profile.jpg"
+                    alt="Pramesh Bhandari"
+                    className="w-full h-full object-cover object-top"
+                  />
                   {/* Decorative frame */}
                   <div className="absolute -top-3 -left-3 w-20 h-20 border-t-2 border-l-2 border-gold/40" />
                   <div className="absolute -bottom-3 -right-3 w-20 h-20 border-b-2 border-r-2 border-gold/40" />

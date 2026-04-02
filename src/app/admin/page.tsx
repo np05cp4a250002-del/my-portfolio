@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, useCallback, FormEvent } from "react";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import Button from "@/components/ui/Button";
-import { FiEdit3, FiLogIn, FiPlus, FiSave } from "react-icons/fi";
+import { FiEdit3, FiLogIn, FiPlus, FiSave, FiMessageSquare, FiRefreshCw } from "react-icons/fi";
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -22,6 +22,44 @@ export default function AdminPage() {
         published: false,
     });
     const [postStatus, setPostStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+    // Messages state
+    type MessageType = {
+        id: string;
+        name: string;
+        email: string;
+        message: string;
+        createdAt: string;
+    };
+    const [messages, setMessages] = useState<MessageType[]>([]);
+    const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+    const [messagesError, setMessagesError] = useState("");
+
+    const fetchMessages = useCallback(async () => {
+        setIsLoadingMessages(true);
+        setMessagesError("");
+        try {
+            const res = await fetch("/api/messages", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setMessages(data.messages || []);
+            } else {
+                setMessagesError(data.error || "Failed to fetch messages");
+            }
+        } catch {
+            setMessagesError("Connection error while fetching messages");
+        } finally {
+            setIsLoadingMessages(false);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        if (isAuthenticated && token) {
+            fetchMessages();
+        }
+    }, [isAuthenticated, token, fetchMessages]);
 
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
@@ -301,6 +339,67 @@ export default function AdminPage() {
                                 </p>
                             )}
                         </form>
+                    </div>
+                </ScrollReveal>
+            </section>
+
+            {/* View Messages */}
+            <section className="container-custom pb-24">
+                <ScrollReveal delay={0.1}>
+                    <div className="border border-beige/30 p-8 md:p-10">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex items-center gap-3">
+                                <FiMessageSquare className="text-gold" />
+                                <h3 className="font-serif text-xl text-charcoal">
+                                    Incoming Messages
+                                </h3>
+                            </div>
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={fetchMessages}
+                                disabled={isLoadingMessages}
+                            >
+                                <FiRefreshCw className={`mr-2 ${isLoadingMessages ? 'animate-spin' : ''}`} /> 
+                                Refresh
+                            </Button>
+                        </div>
+
+                        {messagesError && (
+                            <p className="text-sm text-red-600/70 mb-4">{messagesError}</p>
+                        )}
+
+                        <div className="space-y-4">
+                            {messages.length === 0 && !isLoadingMessages ? (
+                                <p className="text-charcoal-light/60 font-sans text-sm pb-4">
+                                    No messages found.
+                                </p>
+                            ) : (
+                                messages.map((msg) => (
+                                    <div key={msg.id} className="border border-beige/20 p-5 rounded-sm bg-[#faf9f6]/30">
+                                        <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-3 gap-2">
+                                            <div>
+                                                <h4 className="font-medium text-charcoal">{msg.name}</h4>
+                                                <a href={`mailto:${msg.email}`} className="text-sm text-gold hover:underline">
+                                                    {msg.email}
+                                                </a>
+                                            </div>
+                                            <span className="text-xs text-charcoal-light/50 font-mono">
+                                                {new Date(msg.createdAt).toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-charcoal/80 font-sans whitespace-pre-wrap">
+                                            {msg.message}
+                                        </p>
+                                    </div>
+                                ))
+                            )}
+                            {isLoadingMessages && (
+                                <p className="text-charcoal-light/60 font-sans text-sm pb-4 animate-pulse">
+                                    Loading messages...
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </ScrollReveal>
             </section>

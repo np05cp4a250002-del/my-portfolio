@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export async function POST(request: NextRequest) {
     try {
@@ -26,7 +27,30 @@ export async function POST(request: NextRequest) {
                     { status: 200 }
                 );
             }
-            console.log("📮 New newsletter subscriber:", email);
+            console.log("Database skip or error for newsletter subscriber:", err);
+        }
+
+        // Send a notification email to the admin/author
+        try {
+            const resendApiKey = process.env.RESEND_API_KEY;
+            
+            if (process.env.NOTIFICATION_EMAIL && resendApiKey) {
+                const resend = new Resend(resendApiKey);
+                await resend.emails.send({
+                    from: "onboarding@resend.dev",
+                    to: process.env.NOTIFICATION_EMAIL,
+                    subject: "New Newsletter Subscriber!",
+                    html: `
+                        <div style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2>New Subscriber 📬</h2>
+                            <p>Good news! Someone just subscribed to your newsletter.</p>
+                            <p><strong>Subscriber Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                        </div>
+                    `,
+                });
+            }
+        } catch (emailError) {
+            console.error("Failed to notify admin via Resend:", emailError);
         }
 
         return NextResponse.json(

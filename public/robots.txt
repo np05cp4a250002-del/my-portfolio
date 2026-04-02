@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://prameshbhandari.com.np
+
+# Sitemaps
+Sitemap: https://prameshbhandari.com.np/sitemap.xml

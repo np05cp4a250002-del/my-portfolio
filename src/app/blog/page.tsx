@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Metadata } from "next";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import { FiCalendar, FiClock, FiArrowRight } from "react-icons/fi";
-import Link from "next/link";
 
 const categories = [
     "All",

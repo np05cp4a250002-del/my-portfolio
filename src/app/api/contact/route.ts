@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
             } else {
                 const resend = new Resend(resendApiKey);
                 const { data, error } = await resend.emails.send({
-                from: "onboarding@resend.dev",
+                from: "Pramesh Bhandari <contact@prameshbhandari.com.np>",
                 to: process.env.NOTIFICATION_EMAIL as string,
                 replyTo: email,
                 subject: `New Contact Form Submission from ${name}`,

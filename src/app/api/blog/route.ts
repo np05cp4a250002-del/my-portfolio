@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { title, slug, excerpt, content, category, published } = body;
+        const { title, slug, excerpt, content, category, published, imageUrl, tags } = body;
 
         if (!title || !slug || !excerpt || !content || !category) {
             return NextResponse.json(
@@ -58,6 +58,8 @@ export async function POST(request: NextRequest) {
                 content,
                 category,
                 published: published ?? false,
+                imageUrl,
+                tags,
             },
         });
 

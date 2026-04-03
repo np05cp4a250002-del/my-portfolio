@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import {
@@ -49,7 +50,15 @@ const values = [
     },
 ];
 
-export default function AboutPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AboutPage() {
+    const settingsRows = await prisma.setting.findMany();
+    const settings = settingsRows.reduce((acc: Record<string, string>, curr) => {
+        acc[curr.key] = curr.value;
+        return acc;
+    }, {});
+
     return (
         <div className="page-transition pt-28">
             {/* Header */}
@@ -68,7 +77,7 @@ export default function AboutPage() {
                         <div className="relative">
                             <div className="aspect-[3/4] border border-beige/50 overflow-hidden">
                                 <img
-                                    src="/About.jpg"
+                                    src={settings.aboutPhoto || "/About.jpg"}
                                     alt="Pramesh Bhandari"
                                     className="w-full h-full object-cover object-top"
                                 />
@@ -81,14 +90,8 @@ export default function AboutPage() {
                     {/* Bio Text */}
                     <div className="lg:col-span-3 space-y-6">
                         <ScrollReveal>
-                            <p className="text-lg text-charcoal-light/80 leading-relaxed font-light">
-                                I&apos;m <strong className="font-medium text-charcoal">Pramesh Bhandari</strong>, a 21-year-old
-                                from Jhapa, Eastern Nepal. My journey sits at the intersection
-                                of <span className="text-gold font-medium">finance</span>,{" "}
-                                <span className="text-gold font-medium">entrepreneurship</span>
-                                , and <span className="text-gold font-medium">healthcare</span>{" "}
-                                — three pillars that I believe can transform communities when
-                                united with purpose and discipline.
+                            <p className="text-lg text-charcoal-light/80 leading-relaxed font-light whitespace-pre-wrap">
+                                {settings.aboutBio || "I'm Pramesh Bhandari..."}
                             </p>
                         </ScrollReveal>
 
@@ -146,12 +149,8 @@ export default function AboutPage() {
                                 <h3 className="font-serif text-xl text-charcoal">
                                     Business & Finance
                                 </h3>
-                                <p className="text-charcoal-light/70 leading-relaxed font-light">
-                                    Building expertise in financial analysis, investment
-                                    strategies, and business administration. My goal is to become a
-                                    strategic business consultant who bridges the gap between
-                                    traditional commerce and modern digital economies in Nepal and
-                                    beyond.
+                                <p className="text-charcoal-light/70 leading-relaxed font-light whitespace-pre-wrap">
+                                    {settings.aboutVisionBusiness || "Building expertise in financial analysis..."}
                                 </p>
                             </div>
                         </ScrollReveal>
@@ -161,12 +160,8 @@ export default function AboutPage() {
                                 <h3 className="font-serif text-xl text-charcoal">
                                     Healthcare Entrepreneurship
                                 </h3>
-                                <p className="text-charcoal-light/70 leading-relaxed font-light">
-                                    Founding <strong className="text-gold font-medium">आयुरक्षा</strong> —
-                                    a hospital startup in Damak driven by the motto
-                                    &ldquo;Simplicity, Peace, and Care.&rdquo; This project
-                                    represents my deepest commitment to serving communities where
-                                    quality healthcare meets compassionate service.
+                                <p className="text-charcoal-light/70 leading-relaxed font-light whitespace-pre-wrap">
+                                    {settings.aboutVisionHealthcare || "Founding आयुरक्षा — a hospital startup..."}
                                 </p>
                             </div>
                         </ScrollReveal>

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 import SectionHeading from "@/components/ui/SectionHeading";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import {
@@ -15,66 +16,11 @@ export const metadata: Metadata = {
     description:
         "Explore Pramesh Bhandari's projects — from the आयुरक्षा hospital concept to finance research and tech deployments.",
 };
+export const dynamic = "force-dynamic";
 
-const projects = [
-    {
-        slug: "ayuraksha",
-        title: "आयुरक्षा Hospital",
-        category: "Healthcare",
-        icon: FiHeart,
-        description:
-            "A hospital startup concept in Damak, Nepal built on the motto \"Simplicity, Peace, and Care.\" This project envisions quality and accessible healthcare for Eastern Nepal, combining modern medical practices with compassionate community service.",
-        tags: ["Healthcare", "Entrepreneurship", "Social Impact", "Damak"],
-        featured: true,
-        status: "In Development",
-    },
-    {
-        slug: "finance-research",
-        title: "Finance & Investment Research",
-        category: "Finance",
-        icon: FiTrendingUp,
-        description:
-            "Ongoing research papers exploring investment strategies, market dynamics in South Asia, and the intersection of traditional business models with digital economies in Nepal.",
-        tags: ["Finance", "Research", "Investment", "Economics"],
-        featured: false,
-        status: "Ongoing",
-    },
-    {
-        slug: "nutrition-coaching",
-        title: "Precision Nutrition Coaching",
-        category: "Health & Fitness",
-        icon: FiAward,
-        description:
-            "Certified nutrition coaching practice leveraging Precision Nutrition methodologies. Providing evidence-based dietary guidance combined with 3+ years of practical fitness experience.",
-        tags: ["Nutrition", "Fitness", "Coaching", "Health"],
-        featured: false,
-        status: "Active",
-    },
-    {
-        slug: "tech-projects",
-        title: "IT & Software Projects",
-        category: "Technology",
-        icon: FiCpu,
-        description:
-            "Academic and personal technology projects developed during BSc (Hons) Computing coursework — including web applications, database systems, and deployed solutions.",
-        tags: ["Web Development", "Database", "Software", "Computing"],
-        featured: false,
-        status: "Portfolio",
-    },
-    {
-        slug: "leo-club-initiatives",
-        title: "Leo Club & Social Initiatives",
-        category: "Leadership",
-        icon: FiAward,
-        description:
-            "Leading and organizing community service initiatives as Leo Club Treasurer — from plantation drives and orphanage service to youth empowerment programs across Eastern Nepal.",
-        tags: ["Leadership", "Social Work", "Community", "Youth"],
-        featured: false,
-        status: "Active",
-    },
-];
+export default async function ProjectsPage() {
+    const projects = await prisma.project.findMany({ orderBy: { createdAt: "desc" } });
 
-export default function ProjectsPage() {
     return (
         <div className="page-transition pt-28">
             <section className="container-custom py-16">
@@ -95,9 +41,6 @@ export default function ProjectsPage() {
                                     <span className="text-xs tracking-[0.2em] uppercase text-gold font-sans font-medium px-3 py-1 border border-gold/30 bg-gold/5">
                                         Featured Project
                                     </span>
-                                    <span className="text-xs tracking-widest uppercase text-charcoal-light/50 font-sans">
-                                        {project.status}
-                                    </span>
                                 </div>
                                 <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
                                     {project.title}
@@ -105,15 +48,7 @@ export default function ProjectsPage() {
                                 <p className="text-charcoal-light/70 leading-relaxed font-light max-w-3xl mb-6">
                                     {project.description}
                                 </p>
-                                <div className="flex flex-wrap gap-2 mb-8">
-                                    {project.tags.map((tag) => (
-                                        <span
-                                            key={tag}
-                                            className="text-xs font-sans px-3 py-1 bg-beige/20 text-charcoal-light/60 border border-beige/30"
-                                        >
-                                            {tag}
-                                        </span>
-                                    ))}
+                                <div className="flex flex-wrap gap-2 mb-8 hidden">
                                 </div>
                                 <Link
                                     href={`/projects/${project.slug}`}
@@ -135,10 +70,7 @@ export default function ProjectsPage() {
                                 <Link href={`/projects/${project.slug}`} className="block group">
                                     <div className="h-full border border-beige/30 p-8 hover:border-gold/40 transition-all duration-500 hover:-translate-y-1">
                                         <div className="flex items-center justify-between mb-4">
-                                            <project.icon className="text-gold text-xl" />
-                                            <span className="text-xs tracking-widest uppercase text-charcoal-light/40 font-sans">
-                                                {project.status}
-                                            </span>
+                                            <FiCpu className="text-gold text-xl" />
                                         </div>
                                         <span className="text-xs tracking-[0.2em] uppercase text-gold/80 font-sans font-medium">
                                             {project.category}
@@ -149,15 +81,7 @@ export default function ProjectsPage() {
                                         <p className="text-sm text-charcoal-light/60 font-light leading-relaxed mb-5">
                                             {project.description}
                                         </p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {project.tags.slice(0, 3).map((tag) => (
-                                                <span
-                                                    key={tag}
-                                                    className="text-xs font-sans px-2.5 py-0.5 bg-beige/10 text-charcoal-light/50 border border-beige/20"
-                                                >
-                                                    {tag}
-                                                </span>
-                                            ))}
+                                        <div className="flex flex-wrap gap-2 hidden">
                                         </div>
                                     </div>
                                 </Link>

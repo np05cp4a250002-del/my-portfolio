@@ -92,3 +92,57 @@ model Skill {
   order       Int      @default(0)
   createdAt   DateTime @default(now())
 }
+
+model HomeHighlight {
+  id        String   @id @default(cuid())
+  icon      String
+  title     String
+  desc      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model AboutValue {
+  id        String   @id @default(cuid())
+  icon      String
+  title     String
+  desc      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model AboutLeadershipItem {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model ResumeCertification {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model NavigationLink {
+  id        String   @id @default(cuid())
+  location  String   // "navbar" | "footer"
+  href      String
+  label     String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model ContactItem {
+  id        String   @id @default(cuid())
+  location  String   // "contact" | "footer"
+  icon      String   // "map" | "mail" | "phone" etc.
+  label     String
+  value     String
+  href      String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
